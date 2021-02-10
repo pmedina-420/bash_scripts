@@ -17,25 +17,33 @@ if [[ "$VAR" == "$VAR1" ]]; then
 		git status
 		echo
 		echo
-		read -p "$(printf "\e[35m¿Quieres recordar tus últimos commits antes de seguir? [y/n] -->\e[m")" REMIND
-		if [[ "$REMIND" == "$VAR1" ]]; then
-			echo
-			git log --oneline --graph
-		elif [[ "$REMIND" != "$VAR1" ]]; then
-			if [[ "$REMIND" != "$VAR2" ]]; then
+		read -p "$(printf "\e[36m¿Quieres seguir adelante con el commit? [y/n] -->\e[m")" KEEP
+		if [[ "$KEEP" == "$VAR1" ]]; then
+			clear
+			read -p "$(printf "\e[35m¿Quieres recordar tus últimos commits antes de seguir? [y/n] -->\e[m")" REMIND
+			if [[ "$REMIND" == "$VAR1" ]]; then
 				echo
-				printf "\e[31mAsumo que has dicho que no\e[m\n"
+				git log --oneline -3 --graph
+			elif [[ "$REMIND" != "$VAR1" ]]; then
+				if [[ "$REMIND" != "$VAR2" ]]; then
+					echo
+					printf "\e[31mAsumo que has dicho que no\e[m\n"
+				fi
 			fi
-		fi
 		echo
 		read -p "$(printf "\e[33m¿Qué nombre quieres darle al commit? --> \e[m")" COMMIT
 		clear
 		printf "\e[36mSe está subiendo...\e[m\n"
 		echo
 		git add * &> /dev/null && git commit -m "$COMMIT" &> /dev/null && git push -u origin master &> /dev/null
-		git log --oneline --graph
+		git log --oneline -3 --graph
 		echo
 		printf "\e[32mSe ha subido correctamente\e[m\n"
+		else
+			echo
+			printf "\e[31mVuelve a ejecutar el script cuando lo necesites\e[m\n"
+		fi
+		
 	else
 		printf "\e[31mLa ruta introducida no es un repositorio de GitHub\e[m\n"
 	fi
